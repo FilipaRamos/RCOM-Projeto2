@@ -1,0 +1,21 @@
+tux11:~# ifconfig eth0
+eth0      Link encap:Ethernet  HWaddr 00:0f:fe:8b:e4:ef  
+          inet addr:172.16.10.1  Bcast:172.16.10.255  Mask:255.255.255.0
+          inet6 addr: fe80::20f:feff:fe8b:e4ef/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:3848 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:3450 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:929237 (907.4 KiB)  TX bytes:357439 (349.0 KiB)
+          Interrupt:19 Memory:f0500000-f0520000 
+
+
+tux11:~# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+172.16.10.0     0.0.0.0         255.255.255.0   U     0      0        0 eth0
+
+
+tux11:~# arp -a
+? (172.16.10.254) at 00:22:64:a6:a4:f8 [ether] on eth0
+
