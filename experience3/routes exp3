@@ -1,0 +1,25 @@
+//para aceder ao eth1 do tux14 foi preciso alterar a rota default:
+//tux11:~# route add default gw 172.16.10.254
+
+
+tux11:~# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.16.10.254   0.0.0.0         UG    0      0        0 eth0
+172.16.10.0     0.0.0.0         255.255.255.0   U     0      0        0 eth0
+
+
+tux12:~# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.16.11.253   0.0.0.0         UG    0      0        0 eth0
+172.16.11.0     0.0.0.0         255.255.255.0   U     0      0        0 eth0
+
+
+
+tux14:~# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+172.16.10.0     0.0.0.0         255.255.255.0   U     0      0        0 eth0
+172.16.11.0     0.0.0.0         255.255.255.0   U     0      0        0 eth1
+
