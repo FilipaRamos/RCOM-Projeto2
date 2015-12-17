@@ -84,10 +84,10 @@ int parseUrl(char* url, char* host, char* user, char* password, char* path){
     res1 = strtok(NULL, "/");
   }
   path[strlen(path)-1] = '\0';
-	printf("%s\n", path);
-
+	
   strcpy(ftp_parsed->path,path);
-
+  printf("path %s\n", ftp_parsed->path);
+  printf("size : %d\n", strlen(ftp_parsed->path));
 	return 0;
 }
 
@@ -126,6 +126,7 @@ int connect_socket(const char* ip, const int port){
   /*connect to the server*/
       if(connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0){
           perror("connect()");
+          return -1;
   }
 
  return sockfd;
@@ -157,7 +158,7 @@ int read_res_server(int sockfd, char* buf, int size){
   int res = read(sockfd, buf, size);
   buf[res] = 0;
 
-  printf("%s", buf);
+  printf("res_server :   %s", buf);
   
   return res;
 
@@ -169,8 +170,9 @@ int log_in(char* user, char*password, int sockfd){
   
   read_res_server(sockfd, buf, 255);
 
-  sprintf( buf, "user %s\n", user);
+  sprintf(buf, "user %s\n", user);
   write(sockfd, buf, strlen(buf));
+  printf("%s", buf);
 
   read_res_server(sockfd, buf, 255);
 
@@ -225,14 +227,16 @@ int pasv(struct  ftp_parsed* ftp){
 
 int retr(struct  ftp_parsed* ftp){
   char buf[255];
-
+  memset(buf, '\0', 255);
+  printf("size buf: %d\n", strlen(ftp->path));
   sprintf(buf, "retr %s\n", ftp->path);
 
-  printf("buf: %s\n", buf);
+  printf("buf: %s", buf);
 
-  int i = send_command(ftp, buf, strlen(buf));
-  printf("%d\n", ftp->sockfd);
-  //read_res_server(ftp->sockfd, buf, 255);
+  
+  send_command(ftp, buf, strlen(buf));
+  //printf("%d\n", ftp->sockfd);
+  printf("res :  %d\n", read_res_server(ftp->sockfd, buf, 255));
   printf("saddsa\n");
   return 0;
 }
@@ -293,7 +297,7 @@ int main(int argc, char** argv)
   //printf("%s\n", user);
   printf("FTP MAIN: PARSE URL CHECK\n");
   printf("FTP MAIN: CONNECT START\n");
-  ftp_parsed->sockfd = connect_socket( buf, 21);
+  ftp_parsed->sockfd = connect_socket(buf, 21);
 
   printf("FTP MAIN: CONNECT CHECK\n");
   printf("FTP MAIN: LOGIN START\n");
@@ -305,6 +309,8 @@ int main(int argc, char** argv)
 
   printf("FTP MAIN: PASV CHECK\n");
   printf("FTP MAIN: RETR START\n");
+  
+  sleep(1);
   retr(ftp_parsed);
 
   printf("FTP MAIN: RETR CHECK\n");
