@@ -262,7 +262,7 @@ strcat(buf, "\n");
   //send_command(ftp, buf, strlen(buf));
 printf("fd'???? %d\n", ftp->sockfd);
 printf("fd second'???? %d\n", ftp->secSockfd);
-int qweq = write(ftp->sockfd, buf, strlen(buf));
+int qweq = write(ftp->sockfd, buf, buf);
 //int qweq = write(ftp->sockfd, "list\n", strlen("list\n"));
 printf("%d\n", qweq);
 printf("fd'???? %d\n", ftp->sockfd);
