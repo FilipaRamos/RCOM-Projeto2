@@ -1,0 +1,12 @@
+
+root
+8nortel
+
+
+copy flash:tux1-clean startup-config
+
+
+reload
+
+
+

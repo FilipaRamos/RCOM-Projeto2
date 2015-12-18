@@ -1,0 +1,19 @@
+
+en
+
+
+
+
+8nortel
+
+
+configure terminal
+no vlan 2-4094
+exit
+copy flash:tux1-clean startup-config
+
+
+reload
+
+
+
