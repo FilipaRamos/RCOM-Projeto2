@@ -2,30 +2,26 @@
 
 struct ftp_parsed  * ftp_parsed;
 
-int valideteUrl(char * url){
+int validateUrl(char * url){
+  
     	regex_t regex;
 
     	//confirmar expressão 
-       char * expression = "ftp://[[A-Za-z0-9]+:[A-Za-z0-9]+@]*[A-Za-z0-9._~:?#@!$&'()*+,:;=-]+/[A-Za-z0-9._~:/?#@!$&'()*+,:;=-]+";
+       char * expression = "ftp://[A-Za-z0-9]+:[A-Za-z0-9]+@[A-Za-z0-9._~:?#@!$&'()*+,:;=-]+/[A-Za-z0-9._~:/?#@!$&'()*+,:;=-]+";
 
 		//compile the regular expression contained in the string pointed to by the expression
     	int res = regcomp(&regex, expression, REG_EXTENDED);
 
-    	if(res == REG_NOMATCH){
-    		printf("Invalid URL\n");
-    		return 1;
+    	if(res){
+    		printf("Error while validating URL\n");
+        return -1;
     	}
 
-    	if(res != 0){
-    		perror("Error in URL\n");
-    		return 1;
-    	}
-
-    		res = regexec(&regex, url, 0, NULL, 0);
+   		res = regexec(&regex, url, 0, NULL, 0);
     	regfree(&regex);
 
     	if(res ==  REG_NOMATCH){
-    		printf("no match found\n");
+    		printf("Invalid URL\n");
     		return(1);
     	}
 
@@ -36,7 +32,7 @@ int valideteUrl(char * url){
 
     	if (res != 0) {
     		perror("Error exec\n");
-        	return(1);      /* report error */
+        	return(1); // report error 
     	}
 
     	return(0);
@@ -52,10 +48,11 @@ int parseUrl(char* url, char* host, char* user, char* password, char* path){
 
   printf("%s\n", url);
   printf("%s\n", ftp);
-  printf("entrou\n");
 
-	char * res = strtok(ftp, ":");
+  char * res;
 
+	 res = strtok(ftp, ":");
+    printf("-------------------------> USER: %s\n", res);
 		user = res;
     strcpy(ftp_parsed->user, user);
 
@@ -64,10 +61,10 @@ int parseUrl(char* url, char* host, char* user, char* password, char* path){
   res = strtok(NULL, "@");
 
 		password = res;
+    printf("-------------------------> pass: %s\n", password);
     strcpy(ftp_parsed->password, password);
   
   printf("%s\n", ftp_parsed->password);
-
 
 	res = strtok(NULL, "/");
 
@@ -276,7 +273,6 @@ int main(int argc, char** argv)
 {
   if(argc != 2){
     printf("numero de argumentos errado. \n");
-    printf("%s (porta(/dev/ttySN)) ficheiro flag(1-transmitter, 0-receiver) \n", argv[0]);
     return 0;
   }
 
@@ -287,7 +283,42 @@ int main(int argc, char** argv)
   char* buf = malloc(sizeof(char) * 1024);
   ftp_parsed = malloc(sizeof(struct ftp_parsed));
 
-  int res = parseUrl(argv[1],host,user,password,path);
+  int res = validateUrl(argv[1]);
+  if(res != 0){
+        char * pch;
+        char * res;
+        char url[255];
+        pch=strchr(argv[1],'@');
+
+      if(pch == NULL){
+         strcpy(url, "ftp://ftp:pass@");
+      
+        res = strtok(NULL, "/");
+
+        host = res;
+        strcat(url, host);
+
+        const char * res1 = strtok(NULL, "/");
+
+        while(res1 != NULL){
+          strcat(path, res1);
+          strcat(path, "/");
+          res1 = strtok(NULL, "/");
+        }
+        path[strlen(path)-1] = '\0';
+        
+        strcpy(url,path);
+
+      }
+      res = parseUrl(url,host,user,password,path);
+  
+}
+  
+  
+
+  else {
+    res = parseUrl(argv[1],host,user,password,path);
+    } 
 
   printf("%s\n",ftp_parsed->host);
 
@@ -323,7 +354,7 @@ int main(int argc, char** argv)
 
   printf("FTP MAIN: QUIT CHECK\n");
 
-  return res;
+  return 0;
 
 }
 
