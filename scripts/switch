@@ -1,0 +1,37 @@
+
+en
+
+
+
+
+8nortel
+
+
+configure terminal
+vlan 10
+end
+configure terminal
+vlan 11
+end
+configure terminal
+interface fastethernet 0/1
+switchport mode access
+switchport access vlan 10
+exit
+interface fastethernet 0/4
+switchport mode access
+switchport access vlan 10
+exit
+interface fastethernet 0/14
+switchport mode access
+switchport access vlan 11
+exit
+interface fastethernet 0/2
+switchport mode access
+switchport access vlan 11
+exit
+interface gigabitethernet 0/1
+switchport mode access
+switchport access vlan 11
+exit
+end
